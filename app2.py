@@ -142,13 +142,13 @@ def handle_message(event):
         # )
 
         # #文字訊息
-        # if text == "文字":
-        #     line_bot_api.reply_message(
-        #         ReplyMessageRequest(
-        #             reply_token=event.reply_token,
-        #             messages=[TextMessage(text="Hello, world!")]
-        #         )
-        #     )
+        if text == "文字":
+            line_bot_api.reply_message(
+                ReplyMessageRequest(
+                    reply_token=event.reply_token,
+                    messages=[TextMessage(text="Hello, world!")]
+                )
+            )
         # #表情符號
         # elif text == "表情符號":
         #     emojis = [
