@@ -107,7 +107,7 @@ def handle_message(event):
         # )
 
         #test
-@line_handler.add(MessageEvent, message=TextMessageContent)
+# @line_handler.add(MessageEvent, message=TextMessageContent)
 def handle_message(event):
     text = event.message.text
     response_text = get_openai_response(text)
