@@ -50,6 +50,9 @@ from linebot.v3.webhooks import (
 )
 import json
 
+import openai
+from openai import OpenAI
+
 app = Flask(__name__)
 
 configuration = Configuration(access_token='Bwj7yl23jpDQpwH9NPZb758hP/l4gdPzkwwcFa4pjvuz4dKWthMXfhS/pBTALFKn5aoeFap9iSYcaQ9ZDq450lB439CEJhG7apuf/8jwQ0GYw+tS9mq3UD8Ptu633jY5ORx64dg2HjkJoHzH6nDimgdB04t89/1O/w1cDnyilFU=')
@@ -78,7 +81,7 @@ def callback():
 # @handler.add(FollowEvent)
 # def hander_follow(event):
 #     print(f'Got {event.type} event')
-
+client = OpenAI(api_key="sk-proj-Fp28TaX40O35u6CbLAyWQHPpeZYcK56-YO8c5iCmjjDRM0q8kEA344oaDwoesT3BlbkFJpSOmruuxFfQdEuRaK5v0iqZn2otP6ZZVPlIjZuZJduUJ1zLyfKiR8Mq7gA")
 #訊息事件
 @line_handler.add(MessageEvent, message=TextMessageContent)
 def handle_message(event):
@@ -87,12 +90,20 @@ def handle_message(event):
         line_bot_api = MessagingApi(api_client)
 
         # reply message
-        # line_bot_api.reply_message(
-        #     ReplyMessageRequest(
-        #     reply_token=event.reply_token,
-        #     messages=[TextMessage(text='Hello world')]
-        #     )
-        # )
+        line_bot_api.reply_message(
+            ReplyMessageRequest(
+            reply_token=event.reply_token,
+            messages=[TextMessage(text='Hello world')]
+            res = client.completions.create(
+                model="gpt-3.5-turbo-instruct",
+                prompt=reply_token,
+                max_tokens=500,
+                temperature=0
+                )
+             messages=[TextMessage(text=res.choices[0].text)]
+            )
+        )
+        
         # if event.message.text == 'postback':
         #     buttons_template = ButtonsTemplate(
         #         title='Postback Sample',
