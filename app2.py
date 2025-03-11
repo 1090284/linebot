@@ -52,6 +52,7 @@ import json
 
 import openai
 from openai import OpenAI
+from dotenv import dotenv_values
 
 app = Flask(__name__)
 
@@ -81,7 +82,8 @@ def callback():
 # @handler.add(FollowEvent)
 # def hander_follow(event):
 #     print(f'Got {event.type} event')
-client = OpenAI(api_key="sk-proj-Fp28TaX40O35u6CbLAyWQHPpeZYcK56-YO8c5iCmjjDRM0q8kEA344oaDwoesT3BlbkFJpSOmruuxFfQdEuRaK5v0iqZn2otP6ZZVPlIjZuZJduUJ1zLyfKiR8Mq7gA")
+config = dotenv_values('.env')
+client = OpenAI(api_key=config["API_KEY"])
 #訊息事件
 @line_handler.add(MessageEvent, message=TextMessageContent)
 def handle_message(event):
