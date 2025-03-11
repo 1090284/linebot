@@ -93,10 +93,10 @@ def handle_message(event):
         line_bot_api.reply_message(
             ReplyMessageRequest(
             reply_token=event.reply_token,
-            messages=[TextMessage(text='Hello world')]
+            # messages=[TextMessage(text='Hello world')]
             res = client.completions.create(
                 model="gpt-3.5-turbo-instruct",
-                prompt=reply_token,
+                prompt=text,
                 max_tokens=500,
                 temperature=0
                 )
