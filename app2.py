@@ -92,19 +92,55 @@ def handle_message(event):
         line_bot_api = MessagingApi(api_client)
 
         # reply message
-        line_bot_api.reply_message(
-            ReplyMessageRequest(
-            reply_token=event.reply_token,
-            # messages=[TextMessage(text='Hello world')]
-            res = client.completions.create(
-                model="gpt-3.5-turbo-instruct",
-                prompt=text,
-                max_tokens=500,
-                temperature=0
-                )
-             messages=[TextMessage(text=res.choices[0].text)]
-            )
+        # line_bot_api.reply_message(
+        #     ReplyMessageRequest(
+        #     reply_token=event.reply_token,
+        #     # messages=[TextMessage(text='Hello world')]
+        #     res = client.completions.create(
+        #         model="gpt-3.5-turbo-instruct",
+        #         prompt=text,
+        #         max_tokens=500,
+        #         temperature=0
+        #         )
+        #      messages=[TextMessage(text=res.choices[0].text)]
+        #     )
+        # )
+
+        #test
+@line_handler.add(MessageEvent, message=TextMessageContent)
+def handle_message(event):
+    text = event.message.text
+    response_text = get_openai_response(text)
+    reply_to_user(event.reply_token, response_text)
+
+def get_openai_response(prompt):
+    try:
+        res = client.Completion.create(
+            model="gpt-3.5-turbo-instruct",
+            prompt=prompt,
+            max_tokens=500,
+            temperature=0
         )
+        return res.choices[0].text.strip()
+    except Exception as e:
+        app.logger.error(f"OpenAI API call failed: {e}")
+        return "对不起，我无法处理您的请求。"
+
+def reply_to_user(reply_token, text):
+    with ApiClient(configuration) as api_client:
+        line_bot_api = MessagingApi(api_client)
+        try:
+            line_bot_api.reply_message(
+                ReplyMessageRequest(
+                    reply_token=reply_token,
+                    messages=[TextMessage(text=text)]
+                )
+            )
+        except Exception as e:
+            app.logger.error(f"Failed to send reply: {e}")
+
+        #test
+        
         
         # if event.message.text == 'postback':
         #     buttons_template = ButtonsTemplate(
